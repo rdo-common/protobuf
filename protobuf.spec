@@ -12,7 +12,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.0.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/%{name}-%{version}.tar.bz2
@@ -265,6 +265,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Thu Nov 27 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.2-5
+- No problems with ppc & ppc64 arch in rawhide, had to do a release bump.
+
 * Sat Nov 22 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.2-4
 - Added patch from subversion r70 to workaround gcc 4.3.0 bug (see
   http://code.google.com/p/protobuf/issues/detail?id=45 for more
