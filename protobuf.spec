@@ -1,7 +1,8 @@
 # don't build -python subpackage
 %define with_python   %{?_without_python: 0} %{?!_without_python: 1}
 # don't build -java subpackages
-%define with_java     %{?_without_java:   0} %{?!_without_java:   1}
+#%define with_java     %{?_without_java:   0} %{?!_without_java:   1}
+%define with_java 0
 # don't require gtest for building
 %define without_gtest %{?_without_gtest:  1} %{?!_without_gtest:  0}
 
@@ -12,7 +13,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.0.2
-Release:        5%{?dist}
+Release:        6%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/%{name}-%{version}.tar.bz2
@@ -240,8 +241,8 @@ rm -rf %{buildroot}
 %defattr(-, root, root, -)
 %dir %{python_sitelib}/google
 %{python_sitelib}/google/protobuf/
-%{python_sitelib}/protobuf-2.0.2-py2.5.egg-info/
-%{python_sitelib}/protobuf-2.0.2-py2.5-nspkg.pth
+%{python_sitelib}/protobuf-2.0.2-py2.6.egg-info/
+%{python_sitelib}/protobuf-2.0.2-py2.6-nspkg.pth
 %doc python/README.txt 
 %doc examples/add_person.py examples/list_people.py examples/addressbook.proto
 %endif
@@ -265,6 +266,11 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Tue Dec 23 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.2-6
+- Small fixes for python 2.6 eggs.
+- Temporarily disabled java subpackage due to build problems, will be fixed and
+  turned back on in future.
+
 * Thu Nov 27 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.2-5
 - No problems with ppc & ppc64 arch in rawhide, had to do a release bump.
 
