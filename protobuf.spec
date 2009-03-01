@@ -13,7 +13,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.0.2
-Release:        7%{?dist}
+Release:        8%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/%{name}-%{version}.tar.bz2
@@ -23,6 +23,7 @@ Patch0:         protobuf-pkgconfig-autotools.patch
 Patch1:         protobuf-fedora-gtest.patch
 Patch2:         protobuf-java-notests.patch
 Patch3:         protobuf-gcc-4.3.0.patch
+Patch4:         protobuf-2.0.2-includes.patch
 URL:            http://code.google.com/p/protobuf/
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires:  automake autoconf libtool pkgconfig 
@@ -143,6 +144,7 @@ chmod 644 examples/*
 rm -rf java/src/test
 %endif
 %patch3 -p0
+%patch4 -p1
 
 %build
 ./autogen.sh
@@ -266,6 +268,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Sun Mar 01 2009 Caolán McNamra <caolanm@redhat.com> - 2.0.2-8
+- add stdio.h for sprintf, perror, etc.
+
 * Thu Feb 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.2-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
