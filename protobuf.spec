@@ -13,7 +13,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.0.2
-Release:        9%{?dist}
+Release:        10%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/%{name}-%{version}.tar.bz2
@@ -148,7 +148,14 @@ rm -rf java/src/test
 
 %build
 ./autogen.sh
+%if !%{without_gtest}
+export GTEST_CONFIG=`which gtest-config`
+sed -i -e 's|AS_IF(\[test "x$HAVE_GTEST" = "xyes"\],||' -e 's|\[m4_ifval(\[$2\], \[$2\])\],||' -e 's|\[m4_ifval(\[$3\], \[$3\])\])||' aclocal.m4
+autoconf
+%configure --enable-gtest
+%else
 %configure
+%endif
 
 make %{?_smp_mflags}
 
@@ -268,6 +275,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Wed Sep  2 2009 Milos Jakubicek <xjakub@fi.muni.cz> - 2.0.2-10
+- Fix FTBFS (BZ#511491): fix autotools to find gtest-config
+
 * Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.2-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
