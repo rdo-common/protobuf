@@ -13,7 +13,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.3.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/%{name}-%{version}.tar.bz2
@@ -317,6 +317,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Wed Jul 14 2010 James Laska <jlaska@redhat.com> - 2.3.0-2
+- Enable python and java sub-packages
+
 * Tue May 4 2010 Conrad Meyer <konrad@tylerc.org> - 2.3.0-1
 - bump to 2.3.0
 
