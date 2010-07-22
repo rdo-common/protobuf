@@ -12,7 +12,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.3.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/%{name}-%{version}.tar.bz2
@@ -318,6 +318,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Wed Jul 21 2010 David Malcolm <dmalcolm@redhat.com> - 2.3.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Features/Python_2.7/MassRebuild
+
 * Thu Jul 15 2010 James Laska <jlaska@redhat.com> - 2.3.0-3
 - Correct use of %bcond macros
 
