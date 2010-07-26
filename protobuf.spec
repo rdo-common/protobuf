@@ -12,7 +12,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.3.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/%{name}-%{version}.tar.bz2
@@ -293,8 +293,8 @@ rm -rf %{buildroot}
 %defattr(-, root, root, -)
 %dir %{python_sitelib}/google
 %{python_sitelib}/google/protobuf/
-%{python_sitelib}/protobuf-%{version}-py2.6.egg-info/
-%{python_sitelib}/protobuf-%{version}-py2.6-nspkg.pth
+%{python_sitelib}/protobuf-%{version}-py2.?.egg-info/
+%{python_sitelib}/protobuf-%{version}-py2.?-nspkg.pth
 %doc python/README.txt 
 %doc examples/add_person.py examples/list_people.py examples/addressbook.proto
 %endif
@@ -318,6 +318,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Mon Jul 26 2010 David Malcolm <dmalcolm@redhat.com> - 2.3.0-5
+- generalize hardcoded reference to 2.6 in python subpackage %%files manifest
+
 * Wed Jul 21 2010 David Malcolm <dmalcolm@redhat.com> - 2.3.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Features/Python_2.7/MassRebuild
 
