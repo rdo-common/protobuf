@@ -11,14 +11,14 @@
 
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
-Version:        2.3.0
-Release:        7%{?dist}
+Version:        2.4.1
+Release:        1%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/%{name}-%{version}.tar.bz2
 Source1:        ftdetect-proto.vim
-Patch1:		protobuf-2.3.0-fedora-gtest.patch
-Patch2:		protobuf-java-fixes.patch
+Patch1:         protobuf-2.3.0-fedora-gtest.patch
+Patch2:    	    protobuf-2.4.1-java-fixes.patch 
 URL:            http://code.google.com/p/protobuf/
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires:  automake autoconf libtool pkgconfig 
@@ -167,11 +167,11 @@ This package contains the API documentation for %{name}-java.
 %setup -q
 %if %{with gtest}
 rm -rf gtest
-%patch1 -p1
+%patch1 -p1 -b .gtest
 %endif
 chmod 644 examples/*
 %if %{with java}
-%patch2 -p1
+%patch2 -p1 -b .java-fixes
 rm -rf java/src/test
 %endif
 
@@ -317,6 +317,10 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Thu Jun 09 2011 BJ Dierkes <wdierkes@rackspace.com> - 2.4.1-1
+- Latest sources from upstream.
+- Rewrote Patch2 as protobuf-2.4.1-java-fixes.patch
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.0-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
