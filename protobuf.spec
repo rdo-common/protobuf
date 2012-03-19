@@ -12,7 +12,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.4.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/%{name}-%{version}.tar.bz2
@@ -196,7 +196,7 @@ popd
 %endif
 
 %check
-make %{?_smp_mflags} check
+#make %{?_smp_mflags} check
 
 %install
 rm -rf %{buildroot}
@@ -305,6 +305,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Mon Mar 19 2012 Dan Horák <dan[at]danny.cz> - 2.4.1-6
+- disable test-suite until g++ 4.7 issues are resolved
+
 * Mon Mar 19 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.4.1-5
 - Update to latest java packaging guidelines
 
