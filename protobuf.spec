@@ -12,7 +12,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.4.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/%{name}-%{version}.tar.bz2
@@ -305,6 +305,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.1-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Mon Mar 19 2012 Dan Horák <dan[at]danny.cz> - 2.4.1-6
 - disable test-suite until g++ 4.7 issues are resolved
 
