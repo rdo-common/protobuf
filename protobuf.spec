@@ -9,19 +9,25 @@
 %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")
 %endif
 
+%define emacs_version %(pkg-config emacs --modversion)
+%define emacs_lispdir %(pkg-config emacs --variable sitepkglispdir)
+%define emacs_startdir %(pkg-config emacs --variable sitestartdir)
+
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.4.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/%{name}-%{version}.tar.bz2
 Source1:        ftdetect-proto.vim
+Source2:        protobuf-init.el
 Patch1:         protobuf-2.3.0-fedora-gtest.patch
 Patch2:    	    protobuf-2.4.1-java-fixes.patch
 URL:            http://code.google.com/p/protobuf/
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires:  automake autoconf libtool pkgconfig zlib-devel
+BuildRequires:  emacs(bin), emacs-el >= 24.1
 %if %{with gtest}
 BuildRequires:  gtest-devel
 %endif
@@ -126,6 +132,26 @@ Requires: vim-enhanced
 This package contains syntax highlighting for Google Protocol Buffers
 descriptions in Vim editor
 
+%package emacs
+Summary: Emacs mode for Google Protocol Buffers descriptions
+Group: Applications/Editors
+Requires: emacs(bin) >= %{emacs_version}
+
+%description emacs
+This package contains syntax highlighting for Google Protocol Buffers
+descriptions in the Emacs editor.
+
+%package emacs-el
+Summary: Elisp source files for Google protobuf Emacs mode
+Group: Applications/Editors
+Requires: protobuf-emacs >= %{emacs_version}
+
+%description emacs-el
+This package contains the elisp source files for %{pkgname}-emacs
+under GNU Emacs. You do not need to install this package to use
+%{pkgname}-emacs.
+
+
 %if %{with java}
 %package java
 Summary: Java Protocol Buffers runtime library
@@ -195,6 +221,8 @@ mvn-rpmbuild install javadoc:javadoc
 popd
 %endif
 
+emacs -batch -f batch-byte-compile editors/protobuf-mode.el
+
 %check
 #make %{?_smp_mflags} check
 
@@ -222,8 +250,15 @@ cp -rp target/site/apidocs %{buildroot}%{_javadocdir}/%{name}
 install -d -m 755 %{buildroot}%{_mavenpomdir}
 install -pm 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
 %add_maven_depmap JPP-%{name}.pom %{name}.jar
-
+popd
 %endif
+
+mkdir -p $RPM_BUILD_ROOT%{emacs_lispdir}
+mkdir -p $RPM_BUILD_ROOT%{emacs_startdir}
+install -p -m 0644 editors/protobuf-mode.el $RPM_BUILD_ROOT%{emacs_lispdir}
+install -p -m 0644 editors/protobuf-mode.elc $RPM_BUILD_ROOT%{emacs_lispdir}
+install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
+
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -291,6 +326,15 @@ rm -rf %{buildroot}
 %{_datadir}/vim/vimfiles/ftdetect/proto.vim
 %{_datadir}/vim/vimfiles/syntax/proto.vim
 
+%files emacs
+%defattr(-,root,root,-)
+%{emacs_startdir}/protobuf-init.el
+%{emacs_lispdir}/protobuf-mode.elc
+
+%files emacs-el
+%defattr(-,root,root,-)
+%{emacs_lispdir}/protobuf-mode.el
+
 %if %{with java}
 %files java
 %defattr(-, root, root, -)
@@ -305,6 +349,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Thu Jan 17 2013 Tim Niemueller <tim@niemueller.de> - 2.4.1-8
+- Added sub-package for Emacs editing mode
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.1-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
