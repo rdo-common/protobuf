@@ -16,7 +16,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.4.1
-Release:        8%{?dist}
+Release:        9%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/%{name}-%{version}.tar.bz2
@@ -144,7 +144,7 @@ descriptions in the Emacs editor.
 %package emacs-el
 Summary: Elisp source files for Google protobuf Emacs mode
 Group: Applications/Editors
-Requires: protobuf-emacs >= 0%{emacs_version}
+Requires: protobuf-emacs = %{version}
 
 %description emacs-el
 This package contains the elisp source files for %{pkgname}-emacs
@@ -346,6 +346,10 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Sun Jan 20 2013 Conrad Meyer <konrad@tylerc.org> - 2.4.1-9
+- Fix packaging bug, -emacs-el subpackage should depend on -emacs subpackage of
+  the same version (%%version), not the emacs version number...
+
 * Thu Jan 17 2013 Tim Niemueller <tim@niemueller.de> - 2.4.1-8
 - Added sub-package for Emacs editing mode
 
