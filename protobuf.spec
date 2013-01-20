@@ -9,9 +9,9 @@
 %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")
 %endif
 
-%define emacs_version %(pkg-config emacs --modversion)
-%define emacs_lispdir %(pkg-config emacs --variable sitepkglispdir)
-%define emacs_startdir %(pkg-config emacs --variable sitestartdir)
+%global emacs_version %(pkg-config emacs --modversion)
+%global emacs_lispdir %(pkg-config emacs --variable sitepkglispdir)
+%global emacs_startdir %(pkg-config emacs --variable sitestartdir)
 
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
@@ -25,9 +25,9 @@ Source2:        protobuf-init.el
 Patch1:         protobuf-2.3.0-fedora-gtest.patch
 Patch2:    	    protobuf-2.4.1-java-fixes.patch
 URL:            http://code.google.com/p/protobuf/
-BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires:  automake autoconf libtool pkgconfig zlib-devel
-BuildRequires:  emacs(bin), emacs-el >= 24.1
+BuildRequires:  emacs
+BuildRequires:  emacs-el >= 24.1
 %if %{with gtest}
 BuildRequires:  gtest-devel
 %endif
@@ -135,7 +135,7 @@ descriptions in Vim editor
 %package emacs
 Summary: Emacs mode for Google Protocol Buffers descriptions
 Group: Applications/Editors
-Requires: emacs(bin) >= %{emacs_version}
+Requires: emacs >= 0%{emacs_version}
 
 %description emacs
 This package contains syntax highlighting for Google Protocol Buffers
@@ -144,7 +144,7 @@ descriptions in the Emacs editor.
 %package emacs-el
 Summary: Elisp source files for Google protobuf Emacs mode
 Group: Applications/Editors
-Requires: protobuf-emacs >= %{emacs_version}
+Requires: protobuf-emacs >= 0%{emacs_version}
 
 %description emacs-el
 This package contains the elisp source files for %{pkgname}-emacs
@@ -268,9 +268,6 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 
 %post compiler -p /sbin/ldconfig
 %postun compiler -p /sbin/ldconfig
-
-%clean
-rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root, -)
