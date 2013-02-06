@@ -16,7 +16,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.4.1
-Release:        9%{?dist}
+Release:        10%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/%{name}-%{version}.tar.bz2
@@ -158,7 +158,7 @@ Summary: Java Protocol Buffers runtime library
 Group:   Development/Languages
 BuildRequires:    java-devel >= 1.6
 BuildRequires:    jpackage-utils
-BuildRequires:    maven
+BuildRequires:    maven-local
 BuildRequires:    maven-compiler-plugin
 BuildRequires:    maven-install-plugin
 BuildRequires:    maven-jar-plugin
@@ -346,6 +346,10 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 2.4.1-10
+- Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
+- Replace maven BuildRequires with maven-local
+
 * Sun Jan 20 2013 Conrad Meyer <konrad@tylerc.org> - 2.4.1-9
 - Fix packaging bug, -emacs-el subpackage should depend on -emacs subpackage of
   the same version (%%version), not the emacs version number...
