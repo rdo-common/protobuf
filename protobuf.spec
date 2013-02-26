@@ -16,7 +16,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.4.1
-Release:        11%{?dist}
+Release:        12%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/%{name}-%{version}.tar.bz2
@@ -166,8 +166,6 @@ BuildRequires:    maven-javadoc-plugin
 BuildRequires:    maven-resources-plugin
 BuildRequires:    maven-surefire-plugin
 BuildRequires:    maven-antrun-plugin
-BuildRequires:    maven-doxia
-BuildRequires:    maven-doxia-sitetools
 Requires:         java
 Requires:         jpackage-utils
 Conflicts:        %{name}-compiler > %{version}
@@ -346,6 +344,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Tue Feb 26 2013 Conrad Meyer <cemeyer@uw.edu> - 2.4.1-12
+- Nuke BR on maven-doxia, maven-doxia-sitetools (#915620)
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.1-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
