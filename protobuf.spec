@@ -15,15 +15,15 @@
 
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
-Version:        2.4.1
-Release:        12%{?dist}
+Version:        2.5.0
+Release:        1%{?dist}
 License:        BSD
 Group:          Development/Libraries
-Source:         http://protobuf.googlecode.com/files/%{name}-%{version}.tar.bz2
+Source:         http://protobuf.googlecode.com/files/protobuf-%{version}.tar.bz2
 Source1:        ftdetect-proto.vim
 Source2:        protobuf-init.el
-Patch1:         protobuf-2.3.0-fedora-gtest.patch
-Patch2:    	    protobuf-2.4.1-java-fixes.patch
+Patch1:         protobuf-2.5.0-fedora-gtest.patch
+Patch2:    	    protobuf-2.5.0-java-fixes.patch
 URL:            http://code.google.com/p/protobuf/
 BuildRequires:  automake autoconf libtool pkgconfig zlib-devel
 BuildRequires:  emacs
@@ -344,6 +344,10 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Sat Mar 9 2013 Conrad Meyer <cemeyer@uw.edu> - 2.5.0-1
+- Bump to latest upstream (#883822)
+- Rebase gtest, maven patches on 2.5.0
+
 * Tue Feb 26 2013 Conrad Meyer <cemeyer@uw.edu> - 2.4.1-12
 - Nuke BR on maven-doxia, maven-doxia-sitetools (#915620)
 
