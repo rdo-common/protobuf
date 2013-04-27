@@ -16,7 +16,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.5.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/protobuf-%{version}.tar.bz2
@@ -344,6 +344,11 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Sat Apr 27 2013 Conrad Meyer <cemeyer@uw.edu> - 2.5.0-2
+- Remove changelog history from before 2010
+- This spec already runs autoreconf -fi during %%build, but bump build for
+  rhbz #926374
+
 * Sat Mar 9 2013 Conrad Meyer <cemeyer@uw.edu> - 2.5.0-1
 - Bump to latest upstream (#883822)
 - Rebase gtest, maven patches on 2.5.0
@@ -409,69 +414,3 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 
 * Tue May 4 2010 Conrad Meyer <konrad@tylerc.org> - 2.3.0-1
 - bump to 2.3.0
-
-* Wed Sep 30 2009 Lev Shamardin <shamardin@gmail.com> - 2.2.0-2
-- added export PTHREAD_LIBS="-lpthread"
-
-* Fri Sep 18 2009 Lev Shamardin <shamardin@gmail.com> - 2.2.0-1
-- Upgraded to upstream protobuf-2.2.0
-- New -lite packages
-
-* Sun Mar 01 2009 Caolán McNamra <caolanm@redhat.com> - 2.0.2-8
-- add stdio.h for sprintf, perror, etc.
-
-* Thu Feb 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.2-7
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
-
-* Tue Dec 23 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.2-6
-- Small fixes for python 2.6 eggs.
-- Temporarily disabled java subpackage due to build problems, will be fixed and
-  turned back on in future.
-
-* Thu Nov 27 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.2-5
-- No problems with ppc & ppc64 arch in rawhide, had to do a release bump.
-
-* Sat Nov 22 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.2-4
-- Added patch from subversion r70 to workaround gcc 4.3.0 bug (see
-  http://code.google.com/p/protobuf/issues/detail?id=45 for more
-  details).
-
-* Tue Nov 11 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.2-3
-- Added conflicts to java and python subpackages to prevent using with
-  wrong compiler versions.
-- Fixed license.
-- Fixed BuildRequires for -python subpackage.
-- Fixed Requires and Group for -javadoc subpackage.
-- Fixed Requires for -devel subpackage.
-- Fixed issue with wrong shebang in descriptor_pb2.py.
-- Specify build options via --with/--without.
-- Use Fedora-packaged gtest library instead of a bundled one by
-  default (optional).
-
-* Fri Oct 31 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.2-2
-- Use python_sitelib macro instead of INSTALLED_FILES.
-- Fix the license.
-- Fix redundant requirement for -devel subpackage.
-- Fix wrong dependences for -python subpackage.
-- Fix typo in requirements for -javadoc subpackage.
-- Use -p option for cp and install to preserve timestamps.
-- Remove unneeded ldconfig call for post scripts of -devel subpackage.
-- Fix directories ownership.
-
-* Sun Oct 12 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.2-1
-- Update to version 2.0.2
-- New -java and -javadoc subpackages.
-- Options to disable building of -python and -java* subpackages
-
-* Mon Sep 15 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.1-2
-- Added -p switch to install commands to preserve timestamps.
-- Fixed Version and Libs in pkgconfig script.
-- Added pkgconfig requires for -devel package.
-- Removed libtool archives from -devel package.
-
-* Thu Sep 04 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.1-1
-- Updated to 2.0.1 version.
-
-* Wed Aug 13 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.0-0.1.beta
-- Initial package version. Credits for vim subpackage and pkgconfig go
-  to Rick L Vinyard Jr <rvinyard@cs.nmsu.edu>
