@@ -16,7 +16,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.5.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/protobuf-%{version}.tar.bz2
@@ -24,6 +24,7 @@ Source1:        ftdetect-proto.vim
 Source2:        protobuf-init.el
 Patch1:         protobuf-2.5.0-fedora-gtest.patch
 Patch2:    	    protobuf-2.5.0-java-fixes.patch
+Patch3:         0001-Add-generic-GCC-support-for-atomic-operations.patch
 URL:            http://code.google.com/p/protobuf/
 BuildRequires:  automake autoconf libtool pkgconfig zlib-devel
 BuildRequires:  emacs
@@ -197,6 +198,8 @@ chmod 644 examples/*
 rm -rf java/src/test
 %endif
 
+%patch3 -p1 -b .generic-atomics
+
 %build
 iconv -f iso8859-1 -t utf-8 CONTRIBUTORS.txt > CONTRIBUTORS.txt.utf8
 mv CONTRIBUTORS.txt.utf8 CONTRIBUTORS.txt
@@ -344,6 +347,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Mon May 6 2013 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.5.0-3
+- Add support for generic gcc atomic operations (rh #926374)
+
 * Sat Apr 27 2013 Conrad Meyer <cemeyer@uw.edu> - 2.5.0-2
 - Remove changelog history from before 2010
 - This spec already runs autoreconf -fi during %%build, but bump build for
