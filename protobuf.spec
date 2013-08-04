@@ -16,7 +16,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.5.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/protobuf-%{version}.tar.bz2
@@ -349,6 +349,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Thu May 16 2013 Dan Horák <dan[at]danny.cz> - 2.5.0-4
 - export the new generic atomics header (rh #926374)
 
