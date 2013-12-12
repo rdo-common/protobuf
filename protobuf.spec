@@ -16,7 +16,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.5.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/protobuf-%{version}.tar.bz2
@@ -117,7 +117,7 @@ lacks descriptors, reflection, and some other features.
 Summary: Python bindings for Google Protocol Buffers
 Group: Development/Languages
 BuildRequires: python-devel
-BuildRequires: python-setuptools-devel
+BuildRequires: python-setuptools
 Conflicts: %{name}-compiler > %{version}
 Conflicts: %{name}-compiler < %{version}
 
@@ -349,6 +349,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Thu Dec 12 2013 Conrad Meyer <cemeyer@uw.edu> - 2.5.0-6
+- BR python-setuptools-devel -> python-setuptools
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
