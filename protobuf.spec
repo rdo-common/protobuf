@@ -16,7 +16,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.5.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/protobuf-%{version}.tar.bz2
@@ -168,7 +168,7 @@ BuildRequires:    maven-javadoc-plugin
 BuildRequires:    maven-resources-plugin
 BuildRequires:    maven-surefire-plugin
 BuildRequires:    maven-antrun-plugin
-Requires:         java
+Requires:         java-headless
 Requires:         jpackage-utils
 Conflicts:        %{name}-compiler > %{version}
 Conflicts:        %{name}-compiler < %{version}
@@ -349,6 +349,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.5.0-7
+- Use Requires: java-headless rebuild (#1067528)
+
 * Thu Dec 12 2013 Conrad Meyer <cemeyer@uw.edu> - 2.5.0-6
 - BR python-setuptools-devel -> python-setuptools
 
