@@ -16,7 +16,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.5.0
-Release:        8%{?dist}
+Release:        9%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/protobuf-%{version}.tar.bz2
@@ -158,18 +158,9 @@ under GNU Emacs. You do not need to install this package to use
 %package java
 Summary: Java Protocol Buffers runtime library
 Group:   Development/Languages
-BuildRequires:    java-devel >= 1.6
-BuildRequires:    jpackage-utils
 BuildRequires:    maven-local
-BuildRequires:    maven-compiler-plugin
-BuildRequires:    maven-install-plugin
-BuildRequires:    maven-jar-plugin
-BuildRequires:    maven-javadoc-plugin
-BuildRequires:    maven-resources-plugin
-BuildRequires:    maven-surefire-plugin
-BuildRequires:    maven-antrun-plugin
-Requires:         java-headless
-Requires:         jpackage-utils
+BuildRequires:    mvn(org.apache.felix:maven-bundle-plugin)
+BuildRequires:    mvn(org.apache.maven.plugins:maven-antrun-plugin)
 Conflicts:        %{name}-compiler > %{version}
 Conflicts:        %{name}-compiler < %{version}
 
@@ -179,7 +170,6 @@ This package contains Java Protocol Buffers runtime library.
 %package javadoc
 Summary: Javadocs for %{name}-java
 Group:   Documentation
-Requires: jpackage-utils
 Requires: %{name}-java = %{version}-%{release}
 
 %description javadoc
@@ -220,7 +210,8 @@ popd
 
 %if %{with java}
 pushd java
-mvn-rpmbuild install javadoc:javadoc
+%mvn_file : %{name}
+%mvn_build
 popd
 %endif
 
@@ -244,15 +235,7 @@ install -p -m 644 -D editors/proto.vim %{buildroot}%{_datadir}/vim/vimfiles/synt
 
 %if %{with java}
 pushd java
-install -d -m 755 %{buildroot}%{_javadir}
-install -pm 644 target/%{name}-java-%{version}.jar %{buildroot}%{_javadir}/%{name}.jar
-
-install -d -m 755 %{buildroot}%{_javadocdir}/%{name}
-cp -rp target/site/apidocs %{buildroot}%{_javadocdir}/%{name}
-
-install -d -m 755 %{buildroot}%{_mavenpomdir}
-install -pm 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
-%add_maven_depmap JPP-%{name}.pom %{name}.jar
+%mvn_install
 popd
 %endif
 
@@ -336,19 +319,18 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %{emacs_lispdir}/protobuf-mode.el
 
 %if %{with java}
-%files java
+%files java -f java/.mfiles
 %defattr(-, root, root, -)
-%{_mavenpomdir}/JPP-%{name}.pom
-%{_mavendepmapfragdir}/%{name}
-%{_javadir}/%{name}.jar
 %doc examples/AddPerson.java examples/ListPeople.java
 
-%files javadoc
+%files javadoc -f java/.mfiles-javadoc
 %defattr(-, root, root, -)
-%{_javadocdir}/%{name}
 %endif
 
 %changelog
+* Mon Jun 16 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.5.0-9
+- Update to current Java packaging guidelines
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.0-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
