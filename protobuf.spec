@@ -16,7 +16,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.5.0
-Release:        10%{?dist}
+Release:        11%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/protobuf-%{version}.tar.bz2
@@ -137,7 +137,7 @@ descriptions in Vim editor
 %package emacs
 Summary: Emacs mode for Google Protocol Buffers descriptions
 Group: Applications/Editors
-Requires: emacs >= 0%{emacs_version}
+Requires: emacs(bin) >= 0%{emacs_version}
 
 %description emacs
 This package contains syntax highlighting for Google Protocol Buffers
@@ -328,6 +328,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Sun Oct 19 2014 Conrad Meyer <cemeyer@uw.edu> - 2.5.0-11
+- protobuf-emacs requires emacs(bin), not emacs (rh# 1154456)
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.0-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
