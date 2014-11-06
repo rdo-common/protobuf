@@ -324,7 +324,7 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 
 %changelog
 * Sun Oct 19 2014 Conrad Meyer <cemeyer@uw.edu> - 2.6.0-1
-- Bump to upstream release 2.6.0.
+- Bump to upstream release 2.6.0 (rh# 1154474).
 - Rebase 'java fixes' patch on 2.6.0 pom.xml.
 - Drop patch #3 (fall back to generic GCC atomics if no specialized atomics
   exist, e.g. AArch64 GCC); this has been upstreamed.
