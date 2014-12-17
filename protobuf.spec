@@ -16,7 +16,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.6.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/protobuf-%{version}.tar.bz2
@@ -59,6 +59,7 @@ Summary: Protocol Buffers C++ headers and libraries
 Group: Development/Libraries
 Requires: %{name} = %{version}-%{release}
 Requires: %{name}-compiler = %{version}-%{release}
+Requires: zlib-devel
 Requires: pkgconfig
 
 %description devel
@@ -323,6 +324,10 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Wed Dec 17 2014 Peter Lemenkov <lemenkov@gmail.com> - 2.6.0-2
+- Added missing Requires zlib-devel to protobuf-devel (see rhbz #1173343). See
+  also rhbz #732087.
+
 * Sun Oct 19 2014 Conrad Meyer <cemeyer@uw.edu> - 2.6.0-1
 - Bump to upstream release 2.6.0 (rh# 1154474).
 - Rebase 'java fixes' patch on 2.6.0 pom.xml.
