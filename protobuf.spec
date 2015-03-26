@@ -16,7 +16,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.6.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/protobuf-%{version}.tar.bz2
@@ -324,6 +324,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Thu Mar 26 2015 Kalev Lember <kalevlember@gmail.com> - 2.6.0-4
+- Rebuilt for GCC 5 ABI change
+
 * Sat Feb 21 2015 Till Maas <opensource@till.name> - 2.6.0-3
 - Rebuilt for Fedora 23 Change
   https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
