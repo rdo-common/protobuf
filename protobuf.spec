@@ -12,7 +12,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.6.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         https://github.com/google/protobuf/releases/download/v%{version}/protobuf-%{version}.tar.bz2
@@ -215,13 +215,7 @@ popd
 emacs -batch -f batch-byte-compile editors/protobuf-mode.el
 
 %check
-# Tets is segfaulting on arm
-# https://github.com/google/protobuf/issues/298
-%ifnarch %{arm}
 make %{?_smp_mflags} check
-%else
-make %{?_smp_mflags} check || :
-%endif
 
 %install
 rm -rf %{buildroot}
@@ -320,6 +314,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Wed Jan 20 2016 Orion Poplawski <orion@cora.nwra.com> - 2.6.1-3
+- Tests no longer segfaulting on arm
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
