@@ -111,6 +111,7 @@ lacks descriptors, reflection, and some other features.
 %if %{with python}
 %package python
 Summary:        Python bindings for Google Protocol Buffers
+BuildArch:      noarch
 BuildRequires:  python-devel
 BuildRequires:  python-setuptools
 # For tests
@@ -124,6 +125,7 @@ This package contains Python libraries for Google Protocol Buffers
 
 %package vim
 Summary:        Vim syntax highlighting for Google Protocol Buffers descriptions
+BuildArch:      noarch
 Requires:       vim-enhanced
 
 %description vim
@@ -132,6 +134,7 @@ descriptions in Vim editor
 
 %package emacs
 Summary:        Emacs mode for Google Protocol Buffers descriptions
+BuildArch:      noarch
 Requires:       emacs(bin) >= 0%{emacs_version}
 
 %description emacs
@@ -140,6 +143,7 @@ descriptions in the Emacs editor.
 
 %package emacs-el
 Summary:        Elisp source files for Google protobuf Emacs mode
+BuildArch:      noarch
 Requires:       protobuf-emacs = %{version}
 
 %description emacs-el
@@ -151,7 +155,7 @@ under GNU Emacs. You do not need to install this package to use
 %if %{with java}
 %package java
 Summary:        Java Protocol Buffers runtime library
-
+BuildArch:      noarch
 BuildRequires:  maven-local
 BuildRequires:  mvn(com.google.code.gson:gson)
 BuildRequires:  mvn(com.google.guava:guava)
@@ -169,6 +173,7 @@ This package contains Java Protocol Buffers runtime library.
 
 %package java-util
 Summary:        Utilities for Protocol Buffers
+BuildArch:      noarch
 
 %description java-util
 Utilities to work with protos. It contains JSON support
@@ -176,12 +181,14 @@ as well as utilities to work with proto3 well-known types.
 
 %package javadoc
 Summary:        Javadoc for %{name}-java
+BuildArch:      noarch
 
 %description javadoc
 This package contains the API documentation for %{name}-java.
 
 %package javanano
 Summary:        Protocol Buffer JavaNano API
+BuildArch:      noarch
 
 %description javanano
 JavaNano is a special code generator and runtime
@@ -233,7 +240,7 @@ make %{?_smp_mflags}
 
 %if %{with python}
 pushd python
-python ./setup.py build
+%py2_build
 sed -i -e 1d build/lib/google/protobuf/descriptor_pb2.py
 popd
 %endif
@@ -319,10 +326,10 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 
 %if %{with python}
 %files python
-%dir %{python_sitelib}/google
-%{python_sitelib}/google/protobuf/
-%{python_sitelib}/protobuf-%{version}-py2.?.egg-info/
-%{python_sitelib}/protobuf-%{version}-py2.?-nspkg.pth
+%dir %{python2_sitelib}/google
+%{python2_sitelib}/google/protobuf/
+%{python2_sitelib}/protobuf-%{version}-py2.?.egg-info/
+%{python2_sitelib}/protobuf-%{version}-py2.?-nspkg.pth
 %doc python/README.md
 %doc examples/add_person.py examples/list_people.py examples/addressbook.proto
 %endif
@@ -339,7 +346,6 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %{emacs_lispdir}/protobuf-mode.el
 
 %if %{with java}
-
 %files java -f java/.mfiles-protobuf-java
 %doc examples/AddPerson.java examples/ListPeople.java
 %doc java/README.md
@@ -356,10 +362,12 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 
 %files parent -f java/.mfiles-protobuf-parent
 %license LICENSE
-
 %endif
 
 %changelog
+* Fri Nov 04 2016 Orion Poplawski <orion@cora.nwra.com> - 3.1.0-2
+- Make various sub-packages noarch
+
 * Fri Nov 04 2016 gil cattaneo <puntogil@libero.it> 3.1.0-2
 - enable javanano
 - minor changes to adapt to current guidelines
