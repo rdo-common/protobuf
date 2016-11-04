@@ -255,6 +255,7 @@ emacs -batch -f batch-byte-compile editors/protobuf-mode.el
 
 %check
 # TODO: failures; get them fixed and remove || :
+# https://github.com/google/protobuf/issues/631
 make %{?_smp_mflags} check || :
 
 %install
