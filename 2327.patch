@@ -1,0 +1,165 @@
+From eb7f3a3ad1e89ab5de0846c354bbc682e63bd837 Mon Sep 17 00:00:00 2001
+From: Christopher Tubbs <ctubbsii@apache.org>
+Date: Fri, 4 Nov 2016 02:11:55 -0400
+Subject: [PATCH] Use latest maven-compiler-plugin (2.6.0)
+
+* Uses build-helper-maven-plugin to add generated sources to the classpath
+* Fixes an issue building with newer versions of the maven-compiler-plugin
+  (See https://issues.apache.org/jira/browse/MCOMPILER-240)
+---
+ java/compatibility_tests/v2.5.0/protos/pom.xml |  2 +-
+ java/core/pom.xml                              | 33 ++++++++++++++++++++++----
+ java/lite/pom.xml                              | 32 +++++++++++++++++++++++--
+ java/pom.xml                                   |  2 +-
+ java/util/pom.xml                              | 22 +++++++++++++----
+ 5 files changed, 77 insertions(+), 14 deletions(-)
+
+diff --git a/java/compatibility_tests/v2.5.0/protos/pom.xml b/java/compatibility_tests/v2.5.0/protos/pom.xml
+index 24447bd..a22e91e 100644
+--- a/java/compatibility_tests/v2.5.0/protos/pom.xml
++++ b/java/compatibility_tests/v2.5.0/protos/pom.xml
+@@ -28,7 +28,7 @@
+     <plugins>
+       <plugin>
+         <artifactId>maven-compiler-plugin</artifactId>
+-        <version>3.3</version>
++        <version>3.6.0</version>
+         <configuration>
+           <source>1.6</source>
+           <target>1.6</target>
+diff --git a/java/core/pom.xml b/java/core/pom.xml
+index 8a83eb4..cced344 100644
+--- a/java/core/pom.xml
++++ b/java/core/pom.xml
+@@ -92,11 +92,34 @@
+ 
+       <!-- Add the generated sources to the build -->
+       <plugin>
+-        <artifactId>maven-compiler-plugin</artifactId>
+-        <configuration>
+-          <generatedSourcesDirectory>${generated.sources.dir}</generatedSourcesDirectory>
+-          <generatedTestSourcesDirectory>${generated.testsources.dir}</generatedTestSourcesDirectory>
+-        </configuration>
++        <groupId>org.codehaus.mojo</groupId>
++        <artifactId>build-helper-maven-plugin</artifactId>
++        <executions>
++          <execution>
++            <id>add-generated-sources</id>
++            <phase>generate-sources</phase>
++            <goals>
++              <goal>add-source</goal>
++            </goals>
++            <configuration>
++              <sources>
++                <source>${generated.sources.dir}</source>
++              </sources>
++            </configuration>
++          </execution>
++          <execution>
++            <id>add-generated-test-sources</id>
++            <phase>generate-test-sources</phase>
++            <goals>
++              <goal>add-test-source</goal>
++            </goals>
++            <configuration>
++              <sources>
++                <source>${generated.testsources.dir}</source>
++              </sources>
++            </configuration>
++          </execution>
++        </executions>
+       </plugin>
+ 
+       <!-- OSGI bundle configuration -->
+diff --git a/java/lite/pom.xml b/java/lite/pom.xml
+index 9862cd9..d7b1509 100644
+--- a/java/lite/pom.xml
++++ b/java/lite/pom.xml
+@@ -76,10 +76,38 @@
+ 
+       <!-- Only compile a subset of the files -->
+       <plugin>
++        <groupId>org.codehaus.mojo</groupId>
++        <artifactId>build-helper-maven-plugin</artifactId>
++        <executions>
++          <execution>
++            <id>add-generated-sources</id>
++            <phase>generate-sources</phase>
++            <goals>
++              <goal>add-source</goal>
++            </goals>
++            <configuration>
++              <sources>
++                <source>${generated.sources.lite.dir}</source>
++              </sources>
++            </configuration>
++          </execution>
++          <execution>
++            <id>add-generated-test-sources</id>
++            <phase>generate-test-sources</phase>
++            <goals>
++              <goal>add-test-source</goal>
++            </goals>
++            <configuration>
++              <sources>
++                <source>${generated.testsources.lite.dir}</source>
++              </sources>
++            </configuration>
++          </execution>
++        </executions>
++      </plugin>
++      <plugin>
+         <artifactId>maven-compiler-plugin</artifactId>
+         <configuration>
+-          <generatedSourcesDirectory>${generated.sources.lite.dir}</generatedSourcesDirectory>
+-          <generatedTestSourcesDirectory>${generated.testsources.lite.dir}</generatedTestSourcesDirectory>
+           <includes>
+             <include>**/AbstractMessageLite.java</include>
+             <include>**/AbstractParser.java</include>
+diff --git a/java/pom.xml b/java/pom.xml
+index 881473f..6789e7c 100644
+--- a/java/pom.xml
++++ b/java/pom.xml
+@@ -94,7 +94,7 @@
+       <plugins>
+         <plugin>
+           <artifactId>maven-compiler-plugin</artifactId>
+-          <version>3.3</version>
++          <version>3.6.0</version>
+           <configuration>
+             <source>1.6</source>
+             <target>1.6</target>
+diff --git a/java/util/pom.xml b/java/util/pom.xml
+index 6b07bcd..0ccfc84 100644
+--- a/java/util/pom.xml
++++ b/java/util/pom.xml
+@@ -79,12 +79,24 @@
+         </executions>
+       </plugin>
+ 
++      <!-- Add the generated test sources to the build -->
+       <plugin>
+-        <artifactId>maven-compiler-plugin</artifactId>
+-        <configuration>
+-          <!-- Add the generated test sources to the build -->
+-          <generatedTestSourcesDirectory>${generated.testsources.dir}</generatedTestSourcesDirectory>
+-        </configuration>
++        <groupId>org.codehaus.mojo</groupId>
++        <artifactId>build-helper-maven-plugin</artifactId>
++        <executions>
++          <execution>
++            <id>add-generated-test-sources</id>
++            <phase>generate-test-sources</phase>
++            <goals>
++              <goal>add-test-source</goal>
++            </goals>
++            <configuration>
++              <sources>
++                <source>${generated.testsources.dir}</source>
++              </sources>
++            </configuration>
++          </execution>
++        </executions>
+       </plugin>
+ 
+       <!-- Configure the OSGI bundle -->
