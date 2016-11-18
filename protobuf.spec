@@ -10,7 +10,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        3.1.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        BSD
 URL:            https://github.com/google/protobuf
 Source:         https://github.com/google/protobuf/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -224,7 +224,7 @@ rm java/core/src/test/java/com/google/protobuf/ServiceTest.java
 %pom_remove_dep org.easymock:easymockclassextension javanano
 
 # Backward compatibility symlink
-%mvn_file :protobuf-java:jar: %{name}/%{name} %{name}
+%mvn_file :protobuf-java:jar: %{name}/%{name}-java %{name}
 
 %endif
 
@@ -247,9 +247,7 @@ popd
 %endif
 
 %if %{with java}
-pushd java
-%mvn_build -s
-popd
+%mvn_build -s -- -f java/pom.xml
 %endif
 
 emacs -batch -f batch-byte-compile editors/protobuf-mode.el
@@ -272,9 +270,7 @@ install -p -m 644 -D %{SOURCE1} %{buildroot}%{_datadir}/vim/vimfiles/ftdetect/pr
 install -p -m 644 -D editors/proto.vim %{buildroot}%{_datadir}/vim/vimfiles/syntax/proto.vim
 
 %if %{with java}
-pushd java
 %mvn_install
-popd
 %endif
 
 mkdir -p $RPM_BUILD_ROOT%{emacs_lispdir}
@@ -348,25 +344,28 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %{emacs_lispdir}/protobuf-mode.el
 
 %if %{with java}
-%files java -f java/.mfiles-protobuf-java
+%files java -f .mfiles-protobuf-java
 %doc examples/AddPerson.java examples/ListPeople.java
 %doc java/README.md
 %license LICENSE
 
-%files java-util -f java/.mfiles-protobuf-java-util
+%files java-util -f .mfiles-protobuf-java-util
 
-%files javadoc -f java/.mfiles-javadoc
+%files javadoc -f .mfiles-javadoc
 %license LICENSE
 
-%files javanano -f java/.mfiles-protobuf-javanano
+%files javanano -f .mfiles-protobuf-javanano
 %doc javanano/README.md
 %license LICENSE
 
-%files parent -f java/.mfiles-protobuf-parent
+%files parent -f .mfiles-protobuf-parent
 %license LICENSE
 %endif
 
 %changelog
+* Fri Nov 18 2016 Orion Poplawski <orion@cora.nwra.com> - 3.1.0-3
+- Fix jar file compat symlink
+
 * Fri Nov 18 2016 Orion Poplawski <orion@cora.nwra.com> - 3.1.0-2
 - Add needed python requirement
 
