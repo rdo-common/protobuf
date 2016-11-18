@@ -10,7 +10,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        3.1.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 License:        BSD
 URL:            https://github.com/google/protobuf
 Source:         https://github.com/google/protobuf/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -109,19 +109,38 @@ which only depends libprotobuf-lite, which is much smaller than libprotobuf but
 lacks descriptors, reflection, and some other features.
 
 %if %{with python}
-%package python
-Summary:        Python bindings for Google Protocol Buffers
+%package -n python2-%{name}
+Summary:        Python 2 bindings for Google Protocol Buffers
 BuildArch:      noarch
-BuildRequires:  python-devel
+BuildRequires:  python2-devel
 BuildRequires:  python-setuptools
 # For tests
 BuildRequires:  python-google-apputils
 Requires:       python-six >= 1.9
 Conflicts:      %{name}-compiler > %{version}
 Conflicts:      %{name}-compiler < %{version}
+Obsoletes:      %{name}-python < 3.1.0-4
+Provides:       %{name}-python = %{version}-%{release}
+%{?python_provide:%python_provide python2-%{name}}
 
-%description python
-This package contains Python libraries for Google Protocol Buffers
+%description -n python2-%{name}
+This package contains Python 2 libraries for Google Protocol Buffers
+
+%package -n python%{python3_pkgversion}-%{name}
+Summary:        Python 3 bindings for Google Protocol Buffers
+BuildArch:      noarch
+BuildRequires:  python%{python3_pkgversion}-devel
+BuildRequires:  python%{python3_pkgversion}-setuptools
+# For tests
+BuildRequires:  python%{python3_pkgversion}-google-apputils
+Requires:       python%{python3_pkgversion}-six >= 1.9
+Conflicts:      %{name}-compiler > %{version}
+Conflicts:      %{name}-compiler < %{version}
+Provides:       %{name}-python3 = %{version}-%{release}
+%{?python_provide:%python_provide python%{python3_pkgversion}-%{name}}
+
+%description -n python%{python3_pkgversion}-%{name}
+This package contains Python 3 libraries for Google Protocol Buffers
 %endif
 
 %package vim
@@ -148,9 +167,9 @@ BuildArch:      noarch
 Requires:       protobuf-emacs = %{version}
 
 %description emacs-el
-This package contains the elisp source files for %{pkgname}-emacs
+This package contains the elisp source files for %{name}-emacs
 under GNU Emacs. You do not need to install this package to use
-%{pkgname}-emacs.
+%{name}-emacs.
 
 
 %if %{with java}
@@ -209,6 +228,7 @@ Protocol Buffer Parent POM.
 %setup -q -a 3 -a 4
 mv googlemock-release-1.7.0 gmock
 mv googletest-release-1.7.0 gmock/gtest
+find -name \*.cc -o -name \*.h | xargs chmod -x
 chmod 644 examples/*
 %if %{with java}
 %patch0 -p1
@@ -242,7 +262,7 @@ make %{?_smp_mflags}
 %if %{with python}
 pushd python
 %py2_build
-sed -i -e 1d build/lib/google/protobuf/descriptor_pb2.py
+%py3_build
 popd
 %endif
 
@@ -263,7 +283,11 @@ find %{buildroot} -type f -name "*.la" -exec rm -f {} \;
 
 %if %{with python}
 pushd python
-python ./setup.py install --root=%{buildroot} --single-version-externally-managed --record=INSTALLED_FILES --optimize=1
+#python ./setup.py install --root=%{buildroot} --single-version-externally-managed --record=INSTALLED_FILES --optimize=1
+%py2_install
+%py3_install
+find %{buildroot}%{python2_sitelib} %{buildroot}%{python3_sitelib} -name \*.py |
+  xargs sed -i -e '1{\@^#!@d}'
 popd
 %endif
 install -p -m 644 -D %{SOURCE1} %{buildroot}%{_datadir}/vim/vimfiles/ftdetect/proto.vim
@@ -323,11 +347,19 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %{_libdir}/libprotobuf-lite.a
 
 %if %{with python}
-%files python
+%files -n python2-protobuf
 %dir %{python2_sitelib}/google
 %{python2_sitelib}/google/protobuf/
 %{python2_sitelib}/protobuf-%{version}-py2.?.egg-info/
 %{python2_sitelib}/protobuf-%{version}-py2.?-nspkg.pth
+%doc python/README.md
+%doc examples/add_person.py examples/list_people.py examples/addressbook.proto
+
+%files -n python%{python3_pkgversion}-protobuf
+%dir %{python3_sitelib}/google
+%{python3_sitelib}/google/protobuf/
+%{python3_sitelib}/protobuf-%{version}-py3.?.egg-info/
+%{python3_sitelib}/protobuf-%{version}-py3.?-nspkg.pth
 %doc python/README.md
 %doc examples/add_person.py examples/list_people.py examples/addressbook.proto
 %endif
@@ -363,6 +395,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Fri Nov 18 2016 Orion Poplawski <orion@cora.nwra.com> - 3.1.0-4
+- Ship python 3 module
+
 * Fri Nov 18 2016 Orion Poplawski <orion@cora.nwra.com> - 3.1.0-3
 - Fix jar file compat symlink
 
