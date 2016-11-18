@@ -116,6 +116,7 @@ BuildRequires:  python-devel
 BuildRequires:  python-setuptools
 # For tests
 BuildRequires:  python-google-apputils
+Requires:       python-six >= 1.9
 Conflicts:      %{name}-compiler > %{version}
 Conflicts:      %{name}-compiler < %{version}
 
@@ -366,6 +367,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Fri Nov 18 2016 Orion Poplawski <orion@cora.nwra.com> - 3.1.0-2
+- Add needed python requirement
+
 * Fri Nov 04 2016 Orion Poplawski <orion@cora.nwra.com> - 3.1.0-2
 - Make various sub-packages noarch
 
