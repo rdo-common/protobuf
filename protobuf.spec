@@ -10,7 +10,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        3.1.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        BSD
 URL:            https://github.com/google/protobuf
 Source:         https://github.com/google/protobuf/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -246,6 +246,12 @@ rm java/core/src/test/java/com/google/protobuf/ServiceTest.java
 # Backward compatibility symlink
 %mvn_file :protobuf-java:jar: %{name}/%{name}-java %{name}
 
+# This test is incredibly slow on arm
+# https://github.com/google/protobuf/issues/2389
+%ifarch %{arm}
+mv java/core/src/test/java/com/google/protobuf/IsValidUtf8Test.java \
+   java/core/src/test/java/com/google/protobuf/IsValidUtf8Test.java.slow
+%endif
 %endif
 
 rm -f src/solaris/libstdc++.la
@@ -395,6 +401,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Sat Nov 19 2016 Orion Poplawski <orion@cora.nwra.com> - 3.1.0-5
+- Disable slow test on arm
+
 * Fri Nov 18 2016 Orion Poplawski <orion@cora.nwra.com> - 3.1.0-4
 - Ship python 3 module
 
