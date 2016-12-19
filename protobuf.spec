@@ -10,7 +10,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        3.1.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 License:        BSD
 URL:            https://github.com/google/protobuf
 Source:         https://github.com/google/protobuf/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -401,6 +401,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Mon Dec 19 2016 Miro Hrončok <mhroncok@redhat.com> - 3.1.0-6
+- Rebuild for Python 3.6
+
 * Sat Nov 19 2016 Orion Poplawski <orion@cora.nwra.com> - 3.1.0-5
 - Disable slow test on arm
 
