@@ -7,23 +7,20 @@
 %global emacs_lispdir %(pkg-config emacs --variable sitepkglispdir)
 %global emacs_startdir %(pkg-config emacs --variable sitestartdir)
 
+%global rcver rc2
+
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
-Version:        3.1.0
-Release:        6%{?dist}
+Version:        3.2.0
+Release:        0.1.rc2%{?dist}
 License:        BSD
 URL:            https://github.com/google/protobuf
-Source:         https://github.com/google/protobuf/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
+Source:         https://github.com/google/protobuf/archive/v%{version}%{?rcver}/%{name}-%{version}%{?rcver}.tar.gz
 Source1:        ftdetect-proto.vim
 Source2:        protobuf-init.el
 # For tests
 Source3:        https://github.com/google/googlemock/archive/release-1.7.0.tar.gz#/googlemock-1.7.0.tar.gz
 Source4:        https://github.com/google/googletest/archive/release-1.7.0.tar.gz#/googletest-1.7.0.tar.gz
-# Thanks to Christopher <ctubbsii@fedoraproject.org>
-# Uses build-helper-maven-plugin to add generated sources to the classpath
-# Fixes an issue building with newer versions of the maven-compiler-plugin
-# (See https://issues.apache.org/jira/browse/MCOMPILER-240)
-Patch0:         https://github.com/google/protobuf/pull/2327.patch
 
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -225,13 +222,12 @@ Protocol Buffer Parent POM.
 %endif
 
 %prep
-%setup -q -a 3 -a 4
+%setup -q -n %{name}-%{version}%{?rcver} -a 3 -a 4
 mv googlemock-release-1.7.0 gmock
 mv googletest-release-1.7.0 gmock/gtest
 find -name \*.cc -o -name \*.h | xargs chmod -x
 chmod 644 examples/*
 %if %{with java}
-%patch0 -p1
 %pom_remove_parent java/pom.xml
 %pom_remove_dep org.easymock:easymockclassextension java/pom.xml java/*/pom.xml
 # These use easymockclassextension
@@ -320,13 +316,13 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %postun compiler -p /sbin/ldconfig
 
 %files
-%{_libdir}/libprotobuf.so.*
+%{_libdir}/libprotobuf.so.12*
 %doc CHANGES.txt CONTRIBUTORS.txt README.md
 %license LICENSE
 
 %files compiler
 %{_bindir}/protoc
-%{_libdir}/libprotoc.so.*
+%{_libdir}/libprotoc.so.12*
 %doc README.md
 %license LICENSE
 
@@ -343,7 +339,7 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %{_libdir}/libprotoc.a
 
 %files lite
-%{_libdir}/libprotobuf-lite.so.*
+%{_libdir}/libprotobuf-lite.so.12*
 
 %files lite-devel
 %{_libdir}/libprotobuf-lite.so
@@ -356,16 +352,16 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %files -n python2-protobuf
 %dir %{python2_sitelib}/google
 %{python2_sitelib}/google/protobuf/
-%{python2_sitelib}/protobuf-%{version}-py2.?.egg-info/
-%{python2_sitelib}/protobuf-%{version}-py2.?-nspkg.pth
+%{python2_sitelib}/protobuf-%{version}%{?rcver}-py2.?.egg-info/
+%{python2_sitelib}/protobuf-%{version}%{?rcver}-py2.?-nspkg.pth
 %doc python/README.md
 %doc examples/add_person.py examples/list_people.py examples/addressbook.proto
 
 %files -n python%{python3_pkgversion}-protobuf
 %dir %{python3_sitelib}/google
 %{python3_sitelib}/google/protobuf/
-%{python3_sitelib}/protobuf-%{version}-py3.?.egg-info/
-%{python3_sitelib}/protobuf-%{version}-py3.?-nspkg.pth
+%{python3_sitelib}/protobuf-%{version}%{?rcver}-py3.?.egg-info/
+%{python3_sitelib}/protobuf-%{version}%{?rcver}-py3.?-nspkg.pth
 %doc python/README.md
 %doc examples/add_person.py examples/list_people.py examples/addressbook.proto
 %endif
@@ -401,6 +397,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Mon Jan 23 2017 Orion Poplawski <orion@cora.nwra.com> - 3.2.0-0.1.rc2
+- Update to 3.2.0rc2
+
 * Mon Dec 19 2016 Miro Hrončok <mhroncok@redhat.com> - 3.1.0-6
 - Rebuild for Python 3.6
 
