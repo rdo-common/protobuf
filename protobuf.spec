@@ -21,6 +21,7 @@ Source2:        protobuf-init.el
 # For tests
 Source3:        https://github.com/google/googlemock/archive/release-1.7.0.tar.gz#/googlemock-1.7.0.tar.gz
 Source4:        https://github.com/google/googletest/archive/release-1.7.0.tar.gz#/googletest-1.7.0.tar.gz
+Patch0:         protobuf-ppc64.patch
 
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -223,6 +224,7 @@ Protocol Buffer Parent POM.
 
 %prep
 %setup -q -n %{name}-%{version}%{?rcver} -a 3 -a 4
+%patch0 -p1 -b .ppc64
 mv googlemock-release-1.7.0 gmock
 mv googletest-release-1.7.0 gmock/gtest
 find -name \*.cc -o -name \*.h | xargs chmod -x

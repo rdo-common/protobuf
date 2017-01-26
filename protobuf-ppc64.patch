@@ -1,0 +1,17 @@
+diff -up protobuf-3.2.0rc2/src/google/protobuf/wire_format_lite.cc.ppc64 protobuf-3.2.0rc2/src/google/protobuf/wire_format_lite.cc
+--- protobuf-3.2.0rc2/src/google/protobuf/wire_format_lite.cc.ppc64	2017-01-18 16:14:38.000000000 -0700
++++ protobuf-3.2.0rc2/src/google/protobuf/wire_format_lite.cc	2017-01-25 17:02:59.643176129 -0700
+@@ -357,11 +357,11 @@ void EncodeFixedSizeValue(uint64 v, uint
+   WireFormatLite::WriteFixed64NoTagToArray(v, dest);
+ }
+ 
+-void EncodeSFixedSizeValue(int32 v, uint8* dest) {
++void EncodeFixedSizeValue(int32 v, uint8* dest) {
+   WireFormatLite::WriteSFixed32NoTagToArray(v, dest);
+ }
+ 
+-void EncodeSFixedSizeValue(int64 v, uint8* dest) {
++void EncodeFixedSizeValue(int64 v, uint8* dest) {
+   WireFormatLite::WriteSFixed64NoTagToArray(v, dest);
+ }
+ 
