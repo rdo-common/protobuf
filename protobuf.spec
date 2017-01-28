@@ -7,12 +7,12 @@
 %global emacs_lispdir %(pkg-config emacs --variable sitepkglispdir)
 %global emacs_startdir %(pkg-config emacs --variable sitestartdir)
 
-%global rcver rc2
+#global rcver rc2
 
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        3.2.0
-Release:        0.1.rc2%{?dist}
+Release:        1%{?dist}
 License:        BSD
 URL:            https://github.com/google/protobuf
 Source:         https://github.com/google/protobuf/archive/v%{version}%{?rcver}/%{name}-%{version}%{?rcver}.tar.gz
@@ -399,6 +399,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Fri Jan 27 2017 Orion Poplawski <orion@cora.nwra.com> - 3.2.0-1
+- Update to 3.2.0 final
+
 * Mon Jan 23 2017 Orion Poplawski <orion@cora.nwra.com> - 3.2.0-0.1.rc2
 - Update to 3.2.0rc2
 
