@@ -12,7 +12,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        3.3.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 License:        BSD
 URL:            https://github.com/google/protobuf
 Source:         https://github.com/google/protobuf/archive/v%{version}%{?rcver}/%{name}-%{version}%{?rcver}.tar.gz
@@ -400,6 +400,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 3.3.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
+
 * Thu Jul 27 2017 Fedora Release Engineering <releng@fedoraproject.org> - 3.3.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
 
