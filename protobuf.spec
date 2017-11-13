@@ -11,8 +11,8 @@
 
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
-Version:        3.3.1
-Release:        4%{?dist}
+Version:        3.4.1
+Release:        1%{?dist}
 License:        BSD
 URL:            https://github.com/google/protobuf
 Source:         https://github.com/google/protobuf/archive/v%{version}%{?rcver}/%{name}-%{version}%{?rcver}.tar.gz
@@ -319,13 +319,13 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %postun compiler -p /sbin/ldconfig
 
 %files
-%{_libdir}/libprotobuf.so.13*
+%{_libdir}/libprotobuf.so.14*
 %doc CHANGES.txt CONTRIBUTORS.txt README.md
 %license LICENSE
 
 %files compiler
 %{_bindir}/protoc
-%{_libdir}/libprotoc.so.13*
+%{_libdir}/libprotoc.so.14*
 %doc README.md
 %license LICENSE
 
@@ -342,7 +342,7 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %{_libdir}/libprotoc.a
 
 %files lite
-%{_libdir}/libprotobuf-lite.so.13*
+%{_libdir}/libprotobuf-lite.so.14*
 
 %files lite-devel
 %{_libdir}/libprotobuf-lite.so
@@ -400,6 +400,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Mon Nov 13 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3.4.1-1
+- Update to 3.4.1
+
 * Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 3.3.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
 
