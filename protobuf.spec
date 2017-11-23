@@ -11,7 +11,7 @@
 
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
-Version:        3.4.1
+Version:        3.5.0
 Release:        1%{?dist}
 License:        BSD
 URL:            https://github.com/google/protobuf
@@ -319,13 +319,13 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %postun compiler -p /sbin/ldconfig
 
 %files
-%{_libdir}/libprotobuf.so.14*
+%{_libdir}/libprotobuf.so.15*
 %doc CHANGES.txt CONTRIBUTORS.txt README.md
 %license LICENSE
 
 %files compiler
 %{_bindir}/protoc
-%{_libdir}/libprotoc.so.14*
+%{_libdir}/libprotoc.so.15*
 %doc README.md
 %license LICENSE
 
@@ -342,7 +342,7 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %{_libdir}/libprotoc.a
 
 %files lite
-%{_libdir}/libprotobuf-lite.so.14*
+%{_libdir}/libprotobuf-lite.so.15*
 
 %files lite-devel
 %{_libdir}/libprotobuf-lite.so
@@ -400,6 +400,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Thu Nov 23 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3.5.0-1
+- Update to 3.5.0
+
 * Mon Nov 13 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3.4.1-1
 - Update to 3.4.1
 
