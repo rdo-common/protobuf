@@ -335,7 +335,7 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %{_libdir}/libprotobuf.so
 %{_libdir}/libprotoc.so
 %{_libdir}/pkgconfig/protobuf.pc
-%doc examples/add_person.cc examples/addressbook.proto examples/list_people.cc examples/Makefile examples/README.txt
+%doc examples/add_person.cc examples/addressbook.proto examples/list_people.cc examples/Makefile examples/README.md
 
 %files static
 %{_libdir}/libprotobuf.a
