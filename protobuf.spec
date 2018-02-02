@@ -12,7 +12,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        3.5.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        BSD
 URL:            https://github.com/google/protobuf
 Source:         https://github.com/google/protobuf/archive/v%{version}%{?rcver}/%{name}-%{version}%{?rcver}.tar.gz
@@ -311,15 +311,9 @@ install -p -m 0644 editors/protobuf-mode.el $RPM_BUILD_ROOT%{emacs_lispdir}
 install -p -m 0644 editors/protobuf-mode.elc $RPM_BUILD_ROOT%{emacs_lispdir}
 install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 
-
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
-
-%post lite -p /sbin/ldconfig
-%postun lite -p /sbin/ldconfig
-
-%post compiler -p /sbin/ldconfig
-%postun compiler -p /sbin/ldconfig
+%ldconfig_scriptlets
+%ldconfig_scriptlets lite
+%ldconfig_scriptlets compiler
 
 %files
 %{_libdir}/libprotobuf.so.15*
@@ -403,6 +397,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Fri Feb 02 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3.5.0-2
+- Switch to %%ldconfig_scriptlets
+
 * Thu Nov 23 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3.5.0-1
 - Update to 3.5.0
 
