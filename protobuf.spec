@@ -11,18 +11,16 @@
 
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
-Version:        3.5.0
-Release:        8%{?dist}
+Version:        3.6.1
+Release:        1%{?dist}
 License:        BSD
-URL:            https://github.com/google/protobuf
-Source:         https://github.com/google/protobuf/archive/v%{version}%{?rcver}/%{name}-%{version}%{?rcver}.tar.gz
+URL:            https://github.com/protocolbuffers/protobuf
+Source:         https://github.com/protocolbuffers/protobuf/archive/v%{version}%{?rcver}/%{name}-%{version}%{?rcver}-all.tar.gz
 Source1:        ftdetect-proto.vim
 Source2:        protobuf-init.el
 # For tests
 Source3:        https://github.com/google/googlemock/archive/release-1.7.0.tar.gz#/googlemock-1.7.0.tar.gz
 Source4:        https://github.com/google/googletest/archive/release-1.7.0.tar.gz#/googletest-1.7.0.tar.gz
-# Might be upstreamable, but for now temporary workaround
-Patch0:         0001-fix-build-on-s390x.patch
 
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -186,6 +184,7 @@ BuildRequires:  mvn(org.codehaus.mojo:build-helper-maven-plugin)
 BuildRequires:  mvn(org.easymock:easymock)
 Conflicts:      %{name}-compiler > %{version}
 Conflicts:      %{name}-compiler < %{version}
+Obsoletes:      %{name}-javanano < 3.6.0
 
 %description java
 This package contains Java Protocol Buffers runtime library.
@@ -204,15 +203,6 @@ BuildArch:      noarch
 
 %description javadoc
 This package contains the API documentation for %{name}-java.
-
-%package javanano
-Summary:        Protocol Buffer JavaNano API
-BuildArch:      noarch
-
-%description javanano
-JavaNano is a special code generator and runtime
-library designed specially for resource-restricted
-systems, like Android.
 
 %package parent
 Summary:        Protocol Buffer Parent POM
@@ -236,11 +226,6 @@ chmod 644 examples/*
 # These use easymockclassextension
 rm java/core/src/test/java/com/google/protobuf/ServiceTest.java
 #rm -r java/core/src/test
-
-# used by https://github.com/googlei18n/libphonenumber
-%pom_xpath_inject "pom:project/pom:modules" "<module>../javanano</module>" java
-%pom_remove_parent javanano
-%pom_remove_dep org.easymock:easymockclassextension javanano
 
 # Make OSGi dependency on sun.misc package optional
 %pom_xpath_inject "pom:configuration/pom:instructions" "<Import-Package>sun.misc;resolution:=optional,*</Import-Package>" java/core
@@ -316,13 +301,13 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %ldconfig_scriptlets compiler
 
 %files
-%{_libdir}/libprotobuf.so.15*
+%{_libdir}/libprotobuf.so.17*
 %doc CHANGES.txt CONTRIBUTORS.txt README.md
 %license LICENSE
 
 %files compiler
 %{_bindir}/protoc
-%{_libdir}/libprotoc.so.15*
+%{_libdir}/libprotoc.so.17*
 %doc README.md
 %license LICENSE
 
@@ -339,7 +324,7 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %{_libdir}/libprotoc.a
 
 %files lite
-%{_libdir}/libprotobuf-lite.so.15*
+%{_libdir}/libprotobuf-lite.so.17*
 
 %files lite-devel
 %{_libdir}/libprotobuf-lite.so
@@ -388,15 +373,15 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %files javadoc -f .mfiles-javadoc
 %license LICENSE
 
-%files javanano -f .mfiles-protobuf-javanano
-%doc javanano/README.md
-%license LICENSE
-
 %files parent -f .mfiles-protobuf-parent
 %license LICENSE
 %endif
 
 %changelog
+* Tue Oct 23 2018 Felix Kaechele <heffer@fedoraproject.org> - 3.6.1-1
+- update to 3.6.1
+- obsolete javanano subpackage; discontinued upstream
+
 * Fri Jul 27 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3.5.0-8
 - Rebuild for new binutils
 
