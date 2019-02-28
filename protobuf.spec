@@ -12,15 +12,14 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        3.6.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        BSD
 URL:            https://github.com/protocolbuffers/protobuf
 Source:         https://github.com/protocolbuffers/protobuf/archive/v%{version}%{?rcver}/%{name}-%{version}%{?rcver}-all.tar.gz
 Source1:        ftdetect-proto.vim
 Source2:        protobuf-init.el
 # For tests
-Source3:        https://github.com/google/googlemock/archive/release-1.7.0.tar.gz#/googlemock-1.7.0.tar.gz
-Source4:        https://github.com/google/googletest/archive/release-1.7.0.tar.gz#/googletest-1.7.0.tar.gz
+Source3:        https://github.com/google/googletest/archive/release-1.8.1.tar.gz#/googletest-1.8.1.tar.gz
 
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -214,10 +213,9 @@ Protocol Buffer Parent POM.
 %endif
 
 %prep
-%setup -q -n %{name}-%{version}%{?rcver} -a 3 -a 4
+%setup -q -n %{name}-%{version}%{?rcver} -a 3
 %autopatch -p1
-mv googlemock-release-1.7.0 gmock
-mv googletest-release-1.7.0 gmock/gtest
+mv googletest-release-1.8.1/* third_party/googletest/
 find -name \*.cc -o -name \*.h | xargs chmod -x
 chmod 644 examples/*
 %if %{with java}
@@ -250,7 +248,7 @@ export PTHREAD_LIBS="-lpthread"
 ./autogen.sh
 %configure
 
-make %{?_smp_mflags}
+%make_build
 
 %if %{with python}
 pushd python
@@ -266,9 +264,13 @@ popd
 emacs -batch -f batch-byte-compile editors/protobuf-mode.el
 
 %check
-# TODO: failures; get them fixed and remove || :
-# https://github.com/google/protobuf/issues/631
-make %{?_smp_mflags} check || :
+# Java tests fail on s390x
+%ifarch s390x
+fail=0
+%else
+fail=1
+%endif
+make %{?_smp_mflags} check || exit $fail
 
 %install
 make %{?_smp_mflags} install DESTDIR=%{buildroot} STRIPBINARIES=no INSTALL="%{__install} -p" CPPROG="cp -p"
@@ -378,6 +380,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Wed Feb 27 2019 Orion Poplawski <orion@nwra.com> - 3.6.1-3
+- Update googletest to 1.8.1 to re-enable tests
+
 * Sat Feb 02 2019 Fedora Release Engineering <releng@fedoraproject.org> - 3.6.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
