@@ -3,16 +3,12 @@
 # Build -java subpackage
 %bcond_without java
 
-%global emacs_version %(pkg-config emacs --modversion)
-%global emacs_lispdir %(pkg-config emacs --variable sitepkglispdir)
-%global emacs_startdir %(pkg-config emacs --variable sitestartdir)
-
 #global rcver rc2
 
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        3.6.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 License:        BSD
 URL:            https://github.com/protocolbuffers/protobuf
 Source:         https://github.com/protocolbuffers/protobuf/archive/v%{version}%{?rcver}/%{name}-%{version}%{?rcver}-all.tar.gz
@@ -23,12 +19,12 @@ Source3:        https://github.com/google/googletest/archive/release-1.8.1.tar.g
 
 BuildRequires:  autoconf
 BuildRequires:  automake
-BuildRequires:  emacs(bin)
-BuildRequires:  emacs-el >= 24.1
+BuildRequires:  emacs
 BuildRequires:  gcc-c++
 BuildRequires:  libtool
 BuildRequires:  pkgconfig
 BuildRequires:  zlib-devel
+Requires:       emacs-filesystem >= %{_emacs_version}
 
 %description
 Protocol Buffers are a way of encoding structured data in an efficient
@@ -46,6 +42,8 @@ breaking deployed programs that are compiled against the "old" format.
 %package compiler
 Summary:        Protocol Buffers compiler
 Requires:       %{name} = %{version}-%{release}
+Obsoletes:      protobuf-emacs < 3.6.1-4
+Obsoletes:      protobuf-emacs-el < 3.6.1-4
 
 %description compiler
 This package contains Protocol Buffers compiler for all programming
@@ -148,25 +146,6 @@ Requires:       vim-enhanced
 This package contains syntax highlighting for Google Protocol Buffers
 descriptions in Vim editor
 
-%package emacs
-Summary:        Emacs mode for Google Protocol Buffers descriptions
-BuildArch:      noarch
-Requires:       emacs(bin) >= 0%{emacs_version}
-
-%description emacs
-This package contains syntax highlighting for Google Protocol Buffers
-descriptions in the Emacs editor.
-
-%package emacs-el
-Summary:        Elisp source files for Google protobuf Emacs mode
-BuildArch:      noarch
-Requires:       protobuf-emacs = %{version}
-
-%description emacs-el
-This package contains the elisp source files for %{name}-emacs
-under GNU Emacs. You do not need to install this package to use
-%{name}-emacs.
-
 
 %if %{with java}
 %package java
@@ -261,7 +240,8 @@ popd
 %mvn_build -s -- -f java/pom.xml
 %endif
 
-emacs -batch -f batch-byte-compile editors/protobuf-mode.el
+%{_emacs_bytecompile} editors/protobuf-mode.el
+
 
 %check
 # Java tests fail on s390x
@@ -272,8 +252,9 @@ fail=1
 %endif
 make %{?_smp_mflags} check || exit $fail
 
+
 %install
-make %{?_smp_mflags} install DESTDIR=%{buildroot} STRIPBINARIES=no INSTALL="%{__install} -p" CPPROG="cp -p"
+%make_install %{?_smp_mflags} STRIPBINARIES=no INSTALL="%{__install} -p" CPPROG="cp -p"
 find %{buildroot} -type f -name "*.la" -exec rm -f {} \;
 
 %if %{with python}
@@ -292,26 +273,28 @@ install -p -m 644 -D editors/proto.vim %{buildroot}%{_datadir}/vim/vimfiles/synt
 %mvn_install
 %endif
 
-mkdir -p $RPM_BUILD_ROOT%{emacs_lispdir}
-mkdir -p $RPM_BUILD_ROOT%{emacs_startdir}
-install -p -m 0644 editors/protobuf-mode.el $RPM_BUILD_ROOT%{emacs_lispdir}
-install -p -m 0644 editors/protobuf-mode.elc $RPM_BUILD_ROOT%{emacs_lispdir}
-install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
+mkdir -p %{buildroot}%{_emacs_sitelispdir}/%{name}
+install -p -m 0644 editors/protobuf-mode.el %{buildroot}%{_emacs_sitelispdir}/%{name}
+install -p -m 0644 editors/protobuf-mode.elc %{buildroot}%{_emacs_sitelispdir}/%{name}
+mkdir -p %{buildroot}%{_emacs_sitestartdir}
+install -p -m 0644 %{SOURCE2} %{buildroot}%{_emacs_sitestartdir}
 
 %ldconfig_scriptlets
 %ldconfig_scriptlets lite
 %ldconfig_scriptlets compiler
 
 %files
-%{_libdir}/libprotobuf.so.17*
 %doc CHANGES.txt CONTRIBUTORS.txt README.md
 %license LICENSE
+%{_libdir}/libprotobuf.so.17*
 
 %files compiler
-%{_bindir}/protoc
-%{_libdir}/libprotoc.so.17*
 %doc README.md
 %license LICENSE
+%{_bindir}/protoc
+%{_libdir}/libprotoc.so.17*
+%{_emacs_sitelispdir}/%{name}/
+%{_emacs_sitestartdir}/protobuf-init.el
 
 %files devel
 %dir %{_includedir}/google
@@ -357,13 +340,6 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %{_datadir}/vim/vimfiles/ftdetect/proto.vim
 %{_datadir}/vim/vimfiles/syntax/proto.vim
 
-%files emacs
-%{emacs_startdir}/protobuf-init.el
-%{emacs_lispdir}/protobuf-mode.elc
-
-%files emacs-el
-%{emacs_lispdir}/protobuf-mode.el
-
 %if %{with java}
 %files java -f .mfiles-protobuf-java
 %doc examples/AddPerson.java examples/ListPeople.java
@@ -379,7 +355,11 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %license LICENSE
 %endif
 
+
 %changelog
+* Wed May 8 2019 Orion Poplawski <orion@nwra.com> - 3.6.1-4
+- Update emacs packaging to comply with guidelines
+
 * Wed Feb 27 2019 Orion Poplawski <orion@nwra.com> - 3.6.1-3
 - Update googletest to 1.8.1 to re-enable tests
 
