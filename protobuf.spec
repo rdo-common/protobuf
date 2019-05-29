@@ -1,7 +1,14 @@
 # Build -python subpackage
 %bcond_without python
-# Build -java subpackage
+%if 0%{?fedora} || 0%{?rhel} > 7
+%bcond_without python3
 %bcond_without java
+%else
+# Do not build python3 subpackage on EL7
+%bcond_with python3
+# Do not build -java subpackage on EL7
+%bcond_with java
+%endif
 
 #global rcver rc2
 
@@ -108,8 +115,6 @@ Summary:        Python 2 bindings for Google Protocol Buffers
 BuildArch:      noarch
 BuildRequires:  python2-devel
 BuildRequires:  python2-setuptools
-# For tests
-BuildRequires:  python2-google-apputils
 Requires:       python2-six >= 1.9
 Conflicts:      %{name}-compiler > %{version}
 Conflicts:      %{name}-compiler < %{version}
@@ -120,13 +125,12 @@ Provides:       %{name}-python = %{version}-%{release}
 %description -n python2-%{name}
 This package contains Python 2 libraries for Google Protocol Buffers
 
+%if %{with python3}
 %package -n python%{python3_pkgversion}-%{name}
 Summary:        Python 3 bindings for Google Protocol Buffers
 BuildArch:      noarch
 BuildRequires:  python%{python3_pkgversion}-devel
 BuildRequires:  python%{python3_pkgversion}-setuptools
-# For tests
-BuildRequires:  python%{python3_pkgversion}-google-apputils
 Requires:       python%{python3_pkgversion}-six >= 1.9
 Conflicts:      %{name}-compiler > %{version}
 Conflicts:      %{name}-compiler < %{version}
@@ -135,6 +139,7 @@ Provides:       %{name}-python3 = %{version}-%{release}
 
 %description -n python%{python3_pkgversion}-%{name}
 This package contains Python 3 libraries for Google Protocol Buffers
+%endif
 %endif
 
 %package vim
@@ -232,7 +237,9 @@ export PTHREAD_LIBS="-lpthread"
 %if %{with python}
 pushd python
 %py2_build
+%if %{with python3}
 %py3_build
+%endif
 popd
 %endif
 
@@ -261,9 +268,13 @@ find %{buildroot} -type f -name "*.la" -exec rm -f {} \;
 pushd python
 #python ./setup.py install --root=%{buildroot} --single-version-externally-managed --record=INSTALLED_FILES --optimize=1
 %py2_install
-%py3_install
-find %{buildroot}%{python2_sitelib} %{buildroot}%{python3_sitelib} -name \*.py |
+find %{buildroot}%{python2_sitelib} -name \*.py |
   xargs sed -i -e '1{\@^#!@d}'
+%if %{with python3}
+%py3_install
+find %{buildroot}%{python3_sitelib} -name \*.py |
+  xargs sed -i -e '1{\@^#!@d}'
+%endif
 popd
 %endif
 install -p -m 644 -D %{SOURCE1} %{buildroot}%{_datadir}/vim/vimfiles/ftdetect/proto.vim
@@ -279,9 +290,18 @@ install -p -m 0644 editors/protobuf-mode.elc %{buildroot}%{_emacs_sitelispdir}/%
 mkdir -p %{buildroot}%{_emacs_sitestartdir}
 install -p -m 0644 %{SOURCE2} %{buildroot}%{_emacs_sitestartdir}
 
+%if 0%{?fedora} || 0%{?rhel} > 7
 %ldconfig_scriptlets
 %ldconfig_scriptlets lite
 %ldconfig_scriptlets compiler
+%else
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
+%post lite -p /sbin/ldconfig
+%postun lite -p /sbin/ldconfig
+%post compiler -p /sbin/ldconfig
+%postun compiler -p /sbin/ldconfig
+%endif
 
 %files
 %doc CHANGES.txt CONTRIBUTORS.txt README.md
@@ -327,6 +347,7 @@ install -p -m 0644 %{SOURCE2} %{buildroot}%{_emacs_sitestartdir}
 %doc python/README.md
 %doc examples/add_person.py examples/list_people.py examples/addressbook.proto
 
+%if %{with python3}
 %files -n python%{python3_pkgversion}-protobuf
 %dir %{python3_sitelib}/google
 %{python3_sitelib}/google/protobuf/
@@ -334,6 +355,7 @@ install -p -m 0644 %{SOURCE2} %{buildroot}%{_emacs_sitestartdir}
 %{python3_sitelib}/protobuf-%{version}%{?rcver}-py3.?-nspkg.pth
 %doc python/README.md
 %doc examples/add_person.py examples/list_people.py examples/addressbook.proto
+%endif
 %endif
 
 %files vim
