@@ -8,7 +8,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        3.6.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 License:        BSD
 URL:            https://github.com/protocolbuffers/protobuf
 Source:         https://github.com/protocolbuffers/protobuf/archive/v%{version}%{?rcver}/%{name}-%{version}%{?rcver}-all.tar.gz
@@ -357,6 +357,9 @@ install -p -m 0644 %{SOURCE2} %{buildroot}%{_emacs_sitestartdir}
 
 
 %changelog
+* Mon Aug 19 2019 Miro Hrončok <mhroncok@redhat.com> - 3.6.1-6
+- Rebuilt for Python 3.8
+
 * Fri Jul 26 2019 Fedora Release Engineering <releng@fedoraproject.org> - 3.6.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
