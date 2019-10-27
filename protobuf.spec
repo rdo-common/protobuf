@@ -8,7 +8,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        3.6.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 License:        BSD
 URL:            https://github.com/protocolbuffers/protobuf
 Source:         https://github.com/protocolbuffers/protobuf/archive/v%{version}%{?rcver}/%{name}-%{version}%{?rcver}-all.tar.gz
@@ -108,8 +108,6 @@ Summary:        Python 2 bindings for Google Protocol Buffers
 BuildArch:      noarch
 BuildRequires:  python2-devel
 BuildRequires:  python2-setuptools
-# For tests
-BuildRequires:  python2-google-apputils
 Requires:       python2-six >= 1.9
 Conflicts:      %{name}-compiler > %{version}
 Conflicts:      %{name}-compiler < %{version}
@@ -125,8 +123,6 @@ Summary:        Python 3 bindings for Google Protocol Buffers
 BuildArch:      noarch
 BuildRequires:  python%{python3_pkgversion}-devel
 BuildRequires:  python%{python3_pkgversion}-setuptools
-# For tests
-BuildRequires:  python%{python3_pkgversion}-google-apputils
 Requires:       python%{python3_pkgversion}-six >= 1.9
 Conflicts:      %{name}-compiler > %{version}
 Conflicts:      %{name}-compiler < %{version}
@@ -357,6 +353,9 @@ install -p -m 0644 %{SOURCE2} %{buildroot}%{_emacs_sitestartdir}
 
 
 %changelog
+* Sat Oct 26 2019 Orion Poplawski <orion@nwra.com> - 3.6.1-8
+- Drop obsolete BR on python-google-apputils
+
 * Thu Oct 03 2019 Miro Hrončok <mhroncok@redhat.com> - 3.6.1-7
 - Rebuilt for Python 3.8.0rc1 (#1748018)
 
