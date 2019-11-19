@@ -8,7 +8,7 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        3.6.1
-Release:        8%{?dist}
+Release:        9%{?dist}
 License:        BSD
 URL:            https://github.com/protocolbuffers/protobuf
 Source:         https://github.com/protocolbuffers/protobuf/archive/v%{version}%{?rcver}/%{name}-%{version}%{?rcver}-all.tar.gz
@@ -103,21 +103,6 @@ which only depends libprotobuf-lite, which is much smaller than libprotobuf but
 lacks descriptors, reflection, and some other features.
 
 %if %{with python}
-%package -n python2-%{name}
-Summary:        Python 2 bindings for Google Protocol Buffers
-BuildArch:      noarch
-BuildRequires:  python2-devel
-BuildRequires:  python2-setuptools
-Requires:       python2-six >= 1.9
-Conflicts:      %{name}-compiler > %{version}
-Conflicts:      %{name}-compiler < %{version}
-Obsoletes:      %{name}-python < 3.1.0-4
-Provides:       %{name}-python = %{version}-%{release}
-%{?python_provide:%python_provide python2-%{name}}
-
-%description -n python2-%{name}
-This package contains Python 2 libraries for Google Protocol Buffers
-
 %package -n python%{python3_pkgversion}-%{name}
 Summary:        Python 3 bindings for Google Protocol Buffers
 BuildArch:      noarch
@@ -227,7 +212,6 @@ export PTHREAD_LIBS="-lpthread"
 
 %if %{with python}
 pushd python
-%py2_build
 %py3_build
 popd
 %endif
@@ -256,9 +240,8 @@ find %{buildroot} -type f -name "*.la" -exec rm -f {} \;
 %if %{with python}
 pushd python
 #python ./setup.py install --root=%{buildroot} --single-version-externally-managed --record=INSTALLED_FILES --optimize=1
-%py2_install
 %py3_install
-find %{buildroot}%{python2_sitelib} %{buildroot}%{python3_sitelib} -name \*.py |
+find %{buildroot}%{python3_sitelib} -name \*.py |
   xargs sed -i -e '1{\@^#!@d}'
 popd
 %endif
@@ -315,19 +298,11 @@ install -p -m 0644 %{SOURCE2} %{buildroot}%{_emacs_sitestartdir}
 %{_libdir}/libprotobuf-lite.a
 
 %if %{with python}
-%files -n python2-protobuf
-%dir %{python2_sitelib}/google
-%{python2_sitelib}/google/protobuf/
-%{python2_sitelib}/protobuf-%{version}%{?rcver}-py2.?.egg-info/
-%{python2_sitelib}/protobuf-%{version}%{?rcver}-py2.?-nspkg.pth
-%doc python/README.md
-%doc examples/add_person.py examples/list_people.py examples/addressbook.proto
-
 %files -n python%{python3_pkgversion}-protobuf
 %dir %{python3_sitelib}/google
 %{python3_sitelib}/google/protobuf/
-%{python3_sitelib}/protobuf-%{version}%{?rcver}-py3.?.egg-info/
-%{python3_sitelib}/protobuf-%{version}%{?rcver}-py3.?-nspkg.pth
+%{python3_sitelib}/protobuf-%{version}%{?rcver}-py3.*.egg-info/
+%{python3_sitelib}/protobuf-%{version}%{?rcver}-py3.*-nspkg.pth
 %doc python/README.md
 %doc examples/add_person.py examples/list_people.py examples/addressbook.proto
 %endif
@@ -353,6 +328,9 @@ install -p -m 0644 %{SOURCE2} %{buildroot}%{_emacs_sitestartdir}
 
 
 %changelog
+* Tue Nov 19 2019 Miro Hrončok <mhroncok@redhat.com> - 3.6.1-9
+- Drop python2-protobuf (#1765879)
+
 * Sat Oct 26 2019 Orion Poplawski <orion@nwra.com> - 3.6.1-8
 - Drop obsolete BR on python-google-apputils
 
