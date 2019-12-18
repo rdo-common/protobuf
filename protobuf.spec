@@ -7,15 +7,15 @@
 
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
-Version:        3.6.1
-Release:        9%{?dist}
+Version:        3.11.2
+Release:        1%{?dist}
 License:        BSD
 URL:            https://github.com/protocolbuffers/protobuf
 Source:         https://github.com/protocolbuffers/protobuf/archive/v%{version}%{?rcver}/%{name}-%{version}%{?rcver}-all.tar.gz
 Source1:        ftdetect-proto.vim
 Source2:        protobuf-init.el
-# For tests
-Source3:        https://github.com/google/googletest/archive/release-1.8.1.tar.gz#/googletest-1.8.1.tar.gz
+# For tests (using exactly the same version as the release)
+Source3:        https://github.com/google/googletest/archive/5ec7f0c4a113e2f18ac2c6cc7df51ad6afc24081.zip
 
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -24,7 +24,6 @@ BuildRequires:  gcc-c++
 BuildRequires:  libtool
 BuildRequires:  pkgconfig
 BuildRequires:  zlib-devel
-Requires:       emacs-filesystem >= %{_emacs_version}
 
 %description
 Protocol Buffers are a way of encoding structured data in an efficient
@@ -44,6 +43,7 @@ Summary:        Protocol Buffers compiler
 Requires:       %{name} = %{version}-%{release}
 Obsoletes:      protobuf-emacs < 3.6.1-4
 Obsoletes:      protobuf-emacs-el < 3.6.1-4
+Requires:       emacs-filesystem >= %{_emacs_version}
 
 %description compiler
 This package contains Protocol Buffers compiler for all programming
@@ -148,6 +148,13 @@ Obsoletes:      %{name}-javanano < 3.6.0
 %description java
 This package contains Java Protocol Buffers runtime library.
 
+%package javalite
+Summary:        Java Protocol Buffers lite runtime library
+BuildArch:      noarch
+
+%description javalite
+This package contains Java Protocol Buffers lite runtime library.
+
 %package java-util
 Summary:        Utilities for Protocol Buffers
 BuildArch:      noarch
@@ -170,20 +177,35 @@ BuildArch:      noarch
 %description parent
 Protocol Buffer Parent POM.
 
+%package bom
+Summary:        Protocol Buffer BOM POM
+BuildArch:      noarch
+
+%description bom
+Protocol Buffer BOM POM.
+
 %endif
 
 %prep
 %setup -q -n %{name}-%{version}%{?rcver} -a 3
 %autopatch -p1
-mv googletest-release-1.8.1/* third_party/googletest/
+mv googletest-5ec7f0c4a113e2f18ac2c6cc7df51ad6afc24081/* third_party/googletest/
 find -name \*.cc -o -name \*.h | xargs chmod -x
 chmod 644 examples/*
 %if %{with java}
-%pom_remove_parent java/pom.xml
-%pom_remove_dep org.easymock:easymockclassextension java/pom.xml java/*/pom.xml
+%pom_remove_dep org.easymock:easymockclassextension java/pom.xml java/core/pom.xml java/lite/pom.xml java/util/pom.xml
+%pom_remove_dep com.google.truth:truth java/pom.xml java/core/pom.xml java/lite/pom.xml java/util/pom.xml
+%pom_remove_dep com.google.errorprone:error_prone_annotations java/util/pom.xml
+%pom_remove_dep com.google.guava:guava-testlib java/pom.xml java/util/pom.xml
 # These use easymockclassextension
 rm java/core/src/test/java/com/google/protobuf/ServiceTest.java
-#rm -r java/core/src/test
+# These use truth or error_prone_annotations or guava-testlib
+rm java/core/src/test/java/com/google/protobuf/LiteralByteStringTest.java
+rm java/core/src/test/java/com/google/protobuf/BoundedByteStringTest.java
+rm java/core/src/test/java/com/google/protobuf/RopeByteStringTest.java
+rm java/core/src/test/java/com/google/protobuf/RopeByteStringSubstringTest.java
+rm -r java/util/src/test/java/com/google/protobuf/util
+rm -r java/util/src/main/java/com/google/protobuf/util
 
 # Make OSGi dependency on sun.misc package optional
 %pom_xpath_inject "pom:configuration/pom:instructions" "<Import-Package>sun.misc;resolution:=optional,*</Import-Package>" java/core
@@ -193,9 +215,11 @@ rm java/core/src/test/java/com/google/protobuf/ServiceTest.java
 
 # This test is incredibly slow on arm
 # https://github.com/google/protobuf/issues/2389
-%ifarch %{arm}
+%ifarch %{arm} s390x
 mv java/core/src/test/java/com/google/protobuf/IsValidUtf8Test.java \
    java/core/src/test/java/com/google/protobuf/IsValidUtf8Test.java.slow
+mv java/core/src/test/java/com/google/protobuf/DecodeUtf8Test.java \
+   java/core/src/test/java/com/google/protobuf/DecodeUtf8Test.java.slow
 %endif
 %endif
 
@@ -217,6 +241,9 @@ popd
 %endif
 
 %if %{with java}
+%ifarch s390x %{arm}
+export MAVEN_OPTS=-Xmx1024m
+%endif
 %mvn_build -s -- -f java/pom.xml
 %endif
 
@@ -265,13 +292,13 @@ install -p -m 0644 %{SOURCE2} %{buildroot}%{_emacs_sitestartdir}
 %files
 %doc CHANGES.txt CONTRIBUTORS.txt README.md
 %license LICENSE
-%{_libdir}/libprotobuf.so.17*
+%{_libdir}/libprotobuf.so.22*
 
 %files compiler
 %doc README.md
 %license LICENSE
 %{_bindir}/protoc
-%{_libdir}/libprotoc.so.17*
+%{_libdir}/libprotoc.so.22*
 %{_emacs_sitelispdir}/%{name}/
 %{_emacs_sitestartdir}/protobuf-init.el
 
@@ -288,7 +315,7 @@ install -p -m 0644 %{SOURCE2} %{buildroot}%{_emacs_sitestartdir}
 %{_libdir}/libprotoc.a
 
 %files lite
-%{_libdir}/libprotobuf-lite.so.17*
+%{_libdir}/libprotobuf-lite.so.22*
 
 %files lite-devel
 %{_libdir}/libprotobuf-lite.so
@@ -324,10 +351,19 @@ install -p -m 0644 %{SOURCE2} %{buildroot}%{_emacs_sitestartdir}
 
 %files parent -f .mfiles-protobuf-parent
 %license LICENSE
+
+%files bom -f .mfiles-protobuf-bom
+%license LICENSE
+
+%files javalite -f .mfiles-protobuf-javalite
+%license LICENSE
 %endif
 
 
 %changelog
+* Wed Dec 18 2019 Adrian Reber <adrian@lisas.de> - 3.11.2-1
+- Update to 3.11.2
+
 * Tue Nov 19 2019 Miro Hrončok <mhroncok@redhat.com> - 3.6.1-9
 - Drop python2-protobuf (#1765879)
 
